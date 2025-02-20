@@ -252,13 +252,27 @@ function findMediaSources() {
                 }
             }
             
+            // Get favicon URL
+            const getFaviconUrl = () => {
+                // Try high-res favicon first
+                const appleTouchIcon = document.querySelector('link[rel="apple-touch-icon"]');
+                if (appleTouchIcon) return appleTouchIcon.href;
+                
+                // Try standard favicon next
+                const favicon = document.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
+                if (favicon) return favicon.href;
+                
+                // Fallback to default favicon location
+                return new URL('/favicon.ico', window.location.origin).href;
+            };
+            
             newFiles.add({
                 type,
                 url,
                 name: extractFileName(url),
                 source: 'dom',
                 mimeType: mimeType,
-                thumbnail,
+                thumbnail: thumbnail || getFaviconUrl(),
                 duration
             });
         };

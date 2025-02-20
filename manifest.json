@@ -4,13 +4,12 @@
   "version": "1.0",
   "description": "Download media files from websites",
   "permissions": [
-    "activeTab",
     "scripting",
     "downloads",
+    "storage",
+    "tabs",
     "action",
-    "webRequest",
-    "webNavigation",
-    "tabs"
+    "webNavigation"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -25,11 +24,11 @@
     "128": "images/icon128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
   "content_scripts": [{
     "matches": ["<all_urls>"],
-    "js": ["content.js"],
+    "js": ["js/content.js", "js/media-detector.js"],
     "run_at": "document_idle"
   }]
 }

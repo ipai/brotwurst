@@ -51,10 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     mediaElement.className = 'media-item';
                     const fileName = media.name.length > 40 ? media.name.substring(0, 37) + '...' : media.name;
 
-                    // Create thumbnail element - only show thumbnails for videos
+                    // Create thumbnail element
                     let thumbnailHtml;
-                    if (media.type === 'video' && media.thumbnail) {
-                        thumbnailHtml = `<img src="${media.thumbnail}" alt="Video thumbnail">`;
+                    if (media.thumbnail) {
+                        thumbnailHtml = `<img src="${media.thumbnail}" alt="${media.type === 'video' ? 'Video' : 'Audio'} thumbnail" class="media-thumb">`;
                     } else {
                         thumbnailHtml = getMediaTypeIcon(media.type);
                     }
