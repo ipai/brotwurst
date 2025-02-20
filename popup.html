@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Media Downloader</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 350px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .filter-btn {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      color: #333;
+      padding: 5px 10px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      background-color: #e0e0e0;
+    }
+    .filter-btn.active {
+      background-color: #4285f4;
+      color: white;
+      border-color: #4285f4;
+    }
+    .media-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 10px;
+      padding: 0 5px;
+    }
+    .media-item {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      background-color: #f8f9fa;
+      transition: all 0.2s ease;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-item-left {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .media-thumbnail {
+      width: 120px;
+      height: 68px;
+      background-color: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .media-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .media-thumbnail.audio {
+      background-color: #e0e0e0;
+      font-size: 24px;
+    }
+
+    .media-duration {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 1px 4px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+
+    .media-item:hover {
+      border-color: #4285f4;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .media-item-right {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .media-name {
+      font-weight: 500;
+      font-size: 14px;
+      color: #1a73e8;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .media-details {
+      display: flex;
+      gap: 8px;
+      color: #666;
+      font-size: 12px;
+      align-items: center;
+    }
+
+    .file-extension {
+      background: #e8f0fe;
+      color: #1967d2;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .source-tag {
+      color: #666;
+    }
+    
+    /* No media message */
+    .no-media {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-style: italic;
+    }
+    }
+
+    .file-size {
+      color: #666;
+      font-size: 0.9em;
+      padding: 2px 6px;
+      background-color: #e9ecef;
+      border-radius: 3px;
+    }
+    .download-btn {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      min-width: 80px;
+      transition: all 0.2s ease;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .download-btn span {
+      font-size: 1.2em;
+      font-weight: bold;
+      display: inline-block;
+      transform: translateY(-1px);
+    }
+    .download-btn:hover {
+      background-color: #357abd;
+    }
+    .no-media {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+    .media-type-icon {
+      margin-right: 5px;
+    }
+    .source-tag {
+      font-size: 0.8em;
+      color: #666;
+      margin-left: 5px;
+      font-style: italic;
+    }
+    .type-header {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333;
+      margin: 15px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #4285f4;
+    }
+    .type-header:first-child {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Media Downloader</h2>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-type="all">All</button>
+      <button class="filter-btn" data-type="audio">&#127925; Audio</button>
+      <button class="filter-btn" data-type="video">&#127909; Video</button>
+    </div>
+  </div>
+  <div class="media-list" id="media-container">
+    <!-- Media items will be displayed here -->
+    <div class="no-media">Scanning for media files...</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
