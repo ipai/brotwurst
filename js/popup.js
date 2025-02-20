@@ -21,8 +21,11 @@ function createMediaElement(media) {
         thumbnailHtml = getMediaTypeIcon(media.type);
     }
 
-    // Get file extension
-    const extension = media.name.split('.').pop().toUpperCase();
+    // Get file extension and handle HLS streams
+    let extension = media.name.split('.').pop().toUpperCase();
+    if (media.isHLS) {
+        extension = 'HLS';
+    }
     
     const durationHtml = media.duration ? 
         `<div class="media-duration">${media.duration}</div>` : 
@@ -40,7 +43,6 @@ function createMediaElement(media) {
             <div class="media-details">
                 <span class="file-extension">${extension}</span>
                 <span class="file-size">${media.formattedSize || 'Unknown size'}</span>
-                <span class="source-tag">${media.source === 'network' ? 'Network' : 'DOM'}</span>
             </div>
         </div>
     `;
@@ -67,10 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Filter files based on current filter
-        const filesToDisplay = currentFilter === 'all' ? 
-            mediaFiles : 
-            mediaFiles.filter(media => media.type === currentFilter);
+        // Filter and sort files
+        let filesToDisplay = mediaFiles;
+        if (currentFilter !== 'all') {
+            filesToDisplay = mediaFiles.filter(media => media.type === currentFilter);
+        }
+        
+        // Sort by file size (largest first)
+        filesToDisplay.sort((a, b) => (b.size || 0) - (a.size || 0));
 
         console.log('Filtered files:', filesToDisplay.length);
 

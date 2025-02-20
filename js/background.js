@@ -122,39 +122,54 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     return;
                 }
 
-                // Now that we're sure the content script is there, send the message
-                chrome.tabs.sendMessage(request.tabId, { action: 'scanForMedia' }, (response) => {
+                // Inject media-detector.js first
+                chrome.scripting.executeScript({
+                    target: { tabId: request.tabId },
+                    files: ['js/media-detector.js']
+                }, () => {
                     if (chrome.runtime.lastError) {
-                        console.error('Message error:', chrome.runtime.lastError);
-                        sendResponse({ error: 'Could not scan for media' });
+                        console.error('Media detector script injection error:', chrome.runtime.lastError);
+                        sendResponse({ error: 'Could not inject media detector script' });
                         return;
                     }
 
-                    if (response && response.mediaFiles) {
-                        tabMediaFiles.set(request.tabId, response.mediaFiles);
-                        // Update badge with number of media files
-                        const count = response.mediaFiles.length;
-                        console.log('Updating badge with count:', count);
-                        try {
-                            chrome.action.setBadgeText({ 
-                                text: count > 0 ? count.toString() : '',
-                                tabId: request.tabId
-                            }).then(() => {
-                                console.log('Badge text set successfully');
-                                return chrome.action.setBadgeBackgroundColor({ 
-                                    color: '#4285f4',
-                                    tabId: request.tabId
-                                });
-                            }).then(() => {
-                                console.log('Badge color set successfully');
-                            }).catch(error => {
-                                console.error('Error setting badge:', error);
-                            });
-                        } catch (error) {
-                            console.error('Error in badge update:', error);
+                    // Now that we're sure both scripts are there, send the message
+                    chrome.tabs.sendMessage(request.tabId, { action: 'scanForMedia' }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            console.error('Message error:', chrome.runtime.lastError);
+                            sendResponse({ error: 'Could not scan for media' });
+                            return;
                         }
-                        sendResponse({ mediaFiles: response.mediaFiles });
-                    }
+
+                        if (response && response.mediaFiles) {
+                            tabMediaFiles.set(request.tabId, response.mediaFiles);
+                            // Update badge with number of media files
+                            const count = response.mediaFiles.length;
+                            console.log('Updating badge with count:', count);
+                            try {
+                                chrome.action.setBadgeText({ 
+                                    text: count > 0 ? count.toString() : '',
+                                    tabId: request.tabId
+                                }).then(() => {
+                                    console.log('Badge text set successfully');
+                                    return chrome.action.setBadgeBackgroundColor({ 
+                                        color: '#4285f4',
+                                        tabId: request.tabId
+                                    });
+                                }).then(() => {
+                                    console.log('Badge color set successfully');
+                                    // Send the response with media files
+                                    sendResponse({ mediaFiles: response.mediaFiles });
+                                })
+                                .catch(error => {
+                                    console.error('Error setting badge:', error);
+                                });
+                            } catch (error) {
+                                console.error('Error in badge update:', error);
+                                sendResponse({ error: 'Error updating badge' });
+                            }
+                        }
+                    });
                 });
             });
         });
