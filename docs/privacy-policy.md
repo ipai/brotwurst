@@ -59,11 +59,11 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 
 ## Contact Information
 
-For any questions about this Privacy Policy, please contact us at: https://yuub.net
+For any questions about this Privacy Policy, please contact us at: [https://yuub.net](https://yuub.net)
 
 ## Additional Information
 
-- The extension is open source, and the code is available for review at: https://github.com/ipai/brotwurst
+- The extension is open source, and the code is available for review at: [https://github.com/ipai/brotwurst](GitHub)
 - We encourage users to review our code to verify our privacy practices
 - Users can uninstall the extension at any time to remove all local data
 
