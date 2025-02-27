@@ -41,6 +41,12 @@ A Chrome extension that detects and downloads media files from web pages.
 4. Ensure the UI is responsive and animations are smooth
 5. Verify downloads work correctly
 
+### Packaging
+
+```bash
+zip -r brotwurst.zip . --exclude @.zipignore
+```
+
 ## Contributing
 
 1. Fork the repository
