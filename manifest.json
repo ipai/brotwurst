@@ -6,7 +6,6 @@
   "permissions": [
     "scripting",
     "downloads",
-    "storage",
     "tabs",
     "action",
     "webNavigation"
